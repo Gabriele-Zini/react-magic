@@ -7,13 +7,15 @@ function App() {
   const [page, setPage] = useState(1);
   const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
+  const [totalCount, setTotalCount]=useState(undefined)
+  const [totalPages, setTotalPages]=useState(0);
 
   useEffect(() => {
     setLoading(true);
     const params = {
       pageSize: 20,
       page: page,
-      count: 20,
+      totalCount: 'Total-Count',
       name: inputValue,
       contains: "imageUrl",
     };
@@ -22,7 +24,14 @@ function App() {
         .get(`https://api.magicthegathering.io/v1/cards?`, { params })
         .then((res) => {
           setCards(res.data.cards);
-          console.log(res.data.cards);
+          console.log(res);
+          const totalCount = parseInt(res.headers['total-count']); // Ottieni totalCount dall'header della risposta
+          setTotalCount(totalCount);
+          console.log(totalCount)
+          const totalPages =Math.ceil(totalCount/20);
+          setTotalPages(totalPages)
+          console.log('total pages: '+ totalPages)
+  
         })
         .catch((error) => {
           console.error("Error fetching cards:", error);
@@ -30,7 +39,7 @@ function App() {
         .finally(() => setLoading(false));
     };
     fetchData();
-  }, [page, inputValue]);
+  }, [page, inputValue, totalCount, totalPages]);
 
   const nextPage = () => {
     setPage(page + 1);
@@ -47,22 +56,37 @@ function App() {
       <div className="container my-5">
         <div className="row gap-4 m-4 align-items-center justify-content-between">
           {/* pagination */}
-          <div className="d-flex gap-4 m-4 align-items-center justify-content-center col-12 col-md-6 col-lg-4">
-            <button
-              className="btn btn-primary"
-              onClick={prevPage}
-              disabled={page === 1}
-            >
-              prev
-            </button>
-            <p className="m-0">Page: {page}</p>
-            <button
-              className="btn btn-primary"
-              onClick={nextPage}
-              disabled={cards.length < 20}
-            >
-              next
-            </button>
+          <div className="d-flex gap-4 align-items-center justify-content-center col-12 col-md-6 col-lg-4 p-0">
+            <nav aria-label="Page navigation" className="my-4">
+              <ul className="pagination d-flex align-items-center m-0">
+                <li className={`page-item ${page === 1 ? "disabled" : ""}`}>
+                  <button
+                    className="page-link"
+                    onClick={prevPage}
+                    aria-label="Previous"
+                  >
+                    Previous<span aria-hidden="true">&laquo;</span>
+                  </button>
+                </li>
+                <li className="page-item">
+                  <p className="page-link m-0">Page: {page}</p>
+                </li>
+                <li
+                  className={`page-item ${cards.length < 20 ? "disabled" : ""}`}
+                >
+                  <button
+                    className="page-link"
+                    onClick={nextPage}
+                    aria-label="Next"
+                  >
+                    Next<span aria-hidden="true">&raquo;</span>
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <div className="col-12 col-md-10 col-lg-3">
+            <p className="m-0"><strong>Total results:</strong> {totalCount}</p>
           </div>
           <div className="col-12 col-md-10 col-lg-4 d-flex gap-3 align-items-center">
             <label htmlFor="">search</label>
