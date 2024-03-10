@@ -142,7 +142,7 @@ function App() {
         </div>
         {loading && (
           <div
-            className="d-flex justify-content-center text-primary align-items-center" /* style={{height:'30vh'}} */
+            className="d-flex justify-content-center align-items-center" /* style={{height:'30vh'}} */
           >
             <div
               className="spinner-border"
