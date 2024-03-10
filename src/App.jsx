@@ -65,15 +65,15 @@ function App() {
             />
           </div>
         </div>
-        <div className="row justify-content-center align-items-center">
+        <div className="row justify-content-start align-items-center g-5">
           {cards.map((card) =>
             card.imageUrl ? (
               <div
                 key={card.id}
-                className="col-12 col-md-6 col-lg-3 d-flex justify-content-center g-3"
+                className="col-12 col-md-6 col-lg-3 d-flex justify-content-center"
               >
                 <div
-                  className="text-center card bg-light d-flex justify-content-center align-items-center col-12 col-md-8 col-lg-5 mt-5 mx-auto"
+                  className=" w-100 py-5 text-center card bg-light d-flex justify-content-center align-items-center col-12 col-md-8 col-lg-5 mx-auto"
                   style={{ minHeight: "300px" }}
                 >
                   <img src={card.imageUrl} alt="" />
