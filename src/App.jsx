@@ -130,6 +130,7 @@ function App() {
               className="form-control"
               type="text"
               value={inputValue}
+              placeholder="simple search"
               onChange={(e) => setInputValue(e.target.value)}
               onKeyUp={(e) => {
                 if (e.key === "Enter") {
