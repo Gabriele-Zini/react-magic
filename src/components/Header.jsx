@@ -1,4 +1,13 @@
+// App.js
+import { useState } from "react";
+import AdvancedSearchModal from "./AdvancedSearchModal";
+import Button from "react-bootstrap/Button";
+
 function App() {
+  const [showModal, setShowModal] = useState(false);
+
+  const handleShowModal = () => setShowModal(true);
+
   return (
     <>
       <header className="bg-black border-bottom">
@@ -7,10 +16,13 @@ function App() {
             <img className="logo" src="../../public/img/download.jpeg" alt="" />
           </div>
           <div>
-            <button className="me-5 btn btn-secondary ms_btn-secondary">advanced search</button>
+            <Button className="ms_btn-secondary me-5" variant="primary" onClick={handleShowModal}>
+              Launch demo modal
+            </Button>
           </div>
         </div>
       </header>
+      <AdvancedSearchModal show={showModal} onHide={() => setShowModal(false)} />
     </>
   );
 }

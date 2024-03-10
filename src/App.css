@@ -24,6 +24,10 @@
   background-color: rgb(177, 12, 177) !important ;
 }
 
+.ms_font-color-modal {
+  color: black;
+}
+
 /* HTML ELEMS */
 header {
   min-height: 100px;
