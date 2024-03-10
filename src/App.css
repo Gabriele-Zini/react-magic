@@ -1,9 +1,21 @@
 header {
   min-height: 100px;
   width: 100%;
-  background-color: grey;
+}
+
+.logo {
+  width: 200px;
 }
 
 .ms_font-size {
   font-size: .9rem;
+}
+.active>.page-link {
+  background-color: #180c1d !important;
+  color: white !important;
+  border: 1px solid rgb(93, 69, 73) !important;
+}
+
+.page-link {
+  color: black !important;
 }

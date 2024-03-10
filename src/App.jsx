@@ -24,7 +24,7 @@ function App() {
         .get(`https://api.magicthegathering.io/v1/cards?`, { params })
         .then((res) => {
           setCards(res.data.cards);
-          const totalCount = parseInt(res.headers["total-count"]); 
+          const totalCount = parseInt(res.headers["total-count"]);
           setTotalCount(totalCount);
           const totalPages = Math.ceil(totalCount / 20);
           setTotalPages(totalPages);
@@ -48,10 +48,24 @@ function App() {
   };
 
   const renderPageNumbers = () => {
-    const numPagesToShow = 3; // Numero di pagine da mostrare prima e dopo la pagina corrente
+    const numPagesToShow = 5;
     const pageNumbers = [];
-    const startPage = Math.max(1, page - numPagesToShow);
-    const endPage = Math.min(totalPages, page + numPagesToShow);
+    let startPage;
+    let endPage;
+
+    if (totalPages <= numPagesToShow) {
+      startPage = 1;
+      endPage = totalPages;
+    } else if (page <= Math.ceil(numPagesToShow / 2)) {
+      startPage = 1;
+      endPage = numPagesToShow;
+    } else if (page > totalPages - Math.floor(numPagesToShow / 2)) {
+      startPage = totalPages - numPagesToShow + 1;
+      endPage = totalPages;
+    } else {
+      startPage = page - Math.floor(numPagesToShow / 2);
+      endPage = page + Math.ceil(numPagesToShow / 2) - 1;
+    }
 
     for (let i = startPage; i <= endPage; i++) {
       pageNumbers.push(
@@ -149,7 +163,7 @@ function App() {
                   className="col-12 col-md-6 col-lg-3 d-flex justify-content-center"
                 >
                   <div
-                    className="w-100 py-5 text-center card bg-light d-flex justify-content-center align-items-center col-12 col-md-8 col-lg-5 mx-auto"
+                    className="shadow w-100 py-5 text-center card bg-light d-flex justify-content-center align-items-center col-12 col-md-8 col-lg-5 mx-auto"
                     style={{ height: "450px" }}
                   >
                     <img
