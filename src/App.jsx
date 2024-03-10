@@ -7,15 +7,15 @@ function App() {
   const [page, setPage] = useState(1);
   const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
-  const [totalCount, setTotalCount]=useState(undefined)
-  const [totalPages, setTotalPages]=useState(0);
+  const [totalCount, setTotalCount] = useState(undefined);
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
     setLoading(true);
     const params = {
       pageSize: 20,
       page: page,
-      totalCount: 'Total-Count',
+      totalCount: "Total-Count",
       name: inputValue,
       contains: "imageUrl",
     };
@@ -24,14 +24,10 @@ function App() {
         .get(`https://api.magicthegathering.io/v1/cards?`, { params })
         .then((res) => {
           setCards(res.data.cards);
-          console.log(res);
-          const totalCount = parseInt(res.headers['total-count']); // Ottieni totalCount dall'header della risposta
+          const totalCount = parseInt(res.headers["total-count"]); 
           setTotalCount(totalCount);
-          console.log(totalCount)
-          const totalPages =Math.ceil(totalCount/20);
-          setTotalPages(totalPages)
-          console.log('total pages: '+ totalPages)
-  
+          const totalPages = Math.ceil(totalCount / 20);
+          setTotalPages(totalPages);
         })
         .catch((error) => {
           console.error("Error fetching cards:", error);
@@ -51,6 +47,27 @@ function App() {
     }
   };
 
+  const renderPageNumbers = () => {
+    const numPagesToShow = 3; // Numero di pagine da mostrare prima e dopo la pagina corrente
+    const pageNumbers = [];
+    const startPage = Math.max(1, page - numPagesToShow);
+    const endPage = Math.min(totalPages, page + numPagesToShow);
+
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(
+        <li
+          key={i}
+          className={`page-item ${i === page ? "active" : ""}`}
+          onClick={() => setPage(i)}
+        >
+          <button className="page-link">{i}</button>
+        </li>
+      );
+    }
+
+    return pageNumbers;
+  };
+
   return (
     <>
       <div className="container my-5">
@@ -68,11 +85,11 @@ function App() {
                     Previous<span aria-hidden="true">&laquo;</span>
                   </button>
                 </li>
-                <li className="page-item">
-                  <p className="page-link m-0">Page: {page}</p>
-                </li>
+                {renderPageNumbers()}
                 <li
-                  className={`page-item ${cards.length < 20 ? "disabled" : ""}`}
+                  className={`page-item ${
+                    page === totalPages ? "disabled" : ""
+                  }`}
                 >
                   <button
                     className="page-link"
@@ -86,7 +103,12 @@ function App() {
             </nav>
           </div>
           <div className="col-12 col-md-10 col-lg-3">
-            <p className="m-0"><strong>Total results:</strong> {totalCount}</p>
+            <p className="m-0">
+              <strong>Total results:</strong> {totalCount}
+            </p>
+            <p className="m-0">
+              <strong>Total pages:</strong> {totalPages}
+            </p>
           </div>
           <div className="col-12 col-md-10 col-lg-4 d-flex gap-3 align-items-center">
             <label htmlFor="">search</label>
@@ -94,7 +116,7 @@ function App() {
               className="form-control"
               type="text"
               value={inputValue}
-              onChange={(e) => setInputValue()}
+              onChange={(e) => setInputValue(e.target.value)}
               onKeyUp={(e) => {
                 if (e.key === "Enter") {
                   setInputValue(e.target.value);
@@ -118,8 +140,7 @@ function App() {
           </div>
         )}
 
-        {/* card */}
-        {!loading && (
+        {!loading && cards.length > 0 && (
           <div className="row justify-content-start align-items-center g-5">
             {cards.map((card) =>
               card.imageUrl ? (
@@ -128,7 +149,7 @@ function App() {
                   className="col-12 col-md-6 col-lg-3 d-flex justify-content-center"
                 >
                   <div
-                    className=" w-100 py-5 text-center card bg-light d-flex justify-content-center align-items-center col-12 col-md-8 col-lg-5 mx-auto"
+                    className="w-100 py-5 text-center card bg-light d-flex justify-content-center align-items-center col-12 col-md-8 col-lg-5 mx-auto"
                     style={{ height: "450px" }}
                   >
                     <img
@@ -151,33 +172,12 @@ function App() {
             )}
           </div>
         )}
-        {/* card */}
 
-        {cards.length === 0 && !loading && (
+        {!loading && cards.length === 0 && (
           <div className="text-center mt-5 pt-5">
-            <p className="fw-bold fs-3">no results found</p>
+            <p className="fw-bold fs-3">No results found</p>
           </div>
         )}
-        <div className="row gap-4 m-4 align-items-center justify-content-between">
-          {/* pagination */}
-          <div className="d-flex gap-4 m-4 align-items-center justify-content-center col-12 col-md-6 col-lg-4">
-            <button
-              className="btn btn-primary"
-              onClick={prevPage}
-              disabled={page === 1}
-            >
-              prev
-            </button>
-            <p className="m-0">Page: {page}</p>
-            <button
-              className="btn btn-primary"
-              onClick={nextPage}
-              disabled={cards.length < 20}
-            >
-              next
-            </button>
-          </div>
-        </div>
       </div>
     </>
   );
