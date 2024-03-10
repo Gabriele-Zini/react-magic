@@ -3,3 +3,7 @@ header {
   width: 100%;
   background-color: grey;
 }
+
+.ms_font-size {
+  font-size: .9rem;
+}
