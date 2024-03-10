@@ -12,6 +12,7 @@ function App() {
       pageSize: 20,
       page: page,
       count: 20,
+      name:inputValue,
     };
     const fetchData = () => {
       axios
@@ -25,7 +26,7 @@ function App() {
         });
     };
     fetchData();
-  }, [page]);
+  }, [page, inputValue]);
 
   const nextPage = () => {
     setPage(page + 1);
