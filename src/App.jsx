@@ -24,9 +24,10 @@ function App() {
         .get(`https://api.magicthegathering.io/v1/cards?`, { params })
         .then((res) => {
           setCards(res.data.cards);
+          console.log(res)
           const totalCount = parseInt(res.headers["total-count"]);
           setTotalCount(totalCount);
-          const totalPages = Math.ceil(totalCount / 20);
+          const totalPages = Math.ceil(totalCount / res.headers["page-size"]);
           setTotalPages(totalPages);
         })
         .catch((error) => {
