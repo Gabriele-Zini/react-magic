@@ -131,7 +131,7 @@ function App() {
               type="text"
               value={inputValue}
               placeholder="simple search"
-              onChange={(e) => setInputValue(e.target.value)}
+              onChange={(e) => setInputValue()}
               onKeyUp={(e) => {
                 if (e.key === "Enter") {
                   setInputValue(e.target.value);

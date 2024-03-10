@@ -1,8 +1,4 @@
-header {
-  min-height: 100px;
-  width: 100%;
-}
-
+/* UTILITIES */
 .logo {
   width: 200px;
 }
@@ -18,4 +14,18 @@ header {
 
 .page-link {
   color: black !important;
+}
+
+.ms_btn-secondary {
+  background-color: purple !important;
+}
+
+.ms_btn-secondary:hover {
+  background-color: rgb(177, 12, 177) !important ;
+}
+
+/* HTML ELEMS */
+header {
+  min-height: 100px;
+  width: 100%;
 }
