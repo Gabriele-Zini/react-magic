@@ -17,7 +17,7 @@ function App() {
           </div>
           <div>
             <Button className="ms_btn-secondary me-5" variant="primary" onClick={handleShowModal}>
-              Launch demo modal
+              Advanced Search
             </Button>
           </div>
         </div>
