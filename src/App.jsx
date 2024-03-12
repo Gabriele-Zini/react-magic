@@ -128,22 +128,22 @@ function App() {
       <Header onSelectedValuesChange={handleSelectedValuesChange} />
       <div className="container my-5">
         {(selectedValues.types !== "" ||
-          selectedValues.supertypes !== "" ||
+          selectedValues.superTypes !== "" ||
           selectedValues.formats !== "") && (
           <div className="card col-12 col-md-6 col-lg-3 ps-3 pt-3 mx-auto">
             <ul className="list-unstyled">
-              <li>
+              {selectedValues.types !== "" && <li>
                 <strong>Type: </strong>
                 {selectedValues.types}
-              </li>
-              <li>
+              </li>}
+             { selectedValues.formats !== "" &&  <li>
                 <strong>Format: </strong>
                 {selectedValues.formats}
-              </li>
-              <li>
+              </li>}
+           {selectedValues.superTypes !== "" && <li>
                 <strong>Supertype: </strong>
                 {selectedValues.superTypes}
-              </li>
+              </li>}
               <li>
                 <button
                   onClick={resetAdvanceParams}
