@@ -1,12 +1,20 @@
-// App.js
 import { useState } from "react";
 import AdvancedSearchModal from "./AdvancedSearchModal";
 import Button from "react-bootstrap/Button";
+import PropTypes from "prop-types";
 
-function App() {
+function Header({ onSelectedValuesChange }) {
   const [showModal, setShowModal] = useState(false);
+  const [selectedValues, setSelectedValues] = useState({}); 
 
   const handleShowModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
+
+  const handleApplyFilters = (values) => {
+    setSelectedValues(values);
+    handleCloseModal(); 
+    onSelectedValuesChange(values);
+  };
 
   return (
     <>
@@ -22,9 +30,17 @@ function App() {
           </div>
         </div>
       </header>
-      <AdvancedSearchModal show={showModal} onHide={() => setShowModal(false)} />
+      <AdvancedSearchModal
+        show={showModal}
+        onHide={handleCloseModal}
+        onApply={handleApplyFilters} 
+      />
     </>
   );
 }
+Header.propTypes = {
+  onSelectedValuesChange: PropTypes.func.isRequired,
+};
 
-export default App;
+
+export default Header;
