@@ -17,55 +17,42 @@ function App() {
       setLoading(true);
       const cacheKey = `cachedData_page${page}_input${inputValue}`;
       const cachedData = localStorage.getItem(cacheKey);
-      console.log(selectedValues);
-      console.log(selectedValues.types);
-      console.log(selectedValues.superTypes);
-      console.log(selectedValues.formats);
 
-      if (cachedData) {
-        const parsedData = JSON.parse(cachedData);
-        setCards(parsedData.cards);
-        // console.log(parsedData.cards)
-        setTotalCount(parsedData.totalCount);
-        setTotalPages(parsedData.totalPages);
+      try {
+        const params = {
+          pageSize: 20,
+          page: page,
+          name: inputValue,
+          contains: "imageUrl",
+          types: selectedValues.types,
+          formats: selectedValues.formats,
+          supertypes: selectedValues.superTypes,
+        };
+
+        const response = await axios.get(
+          "https://api.magicthegathering.io/v1/cards?",
+          { params }
+        );
+
+        const totalCount = parseInt(response.headers["total-count"]);
+        const totalPages = Math.ceil(totalCount / 20);
+
+        setCards(response.data.cards);
+        setTotalCount(totalCount);
+        setTotalPages(totalPages);
+
+        localStorage.setItem(
+          cacheKey,
+          JSON.stringify({
+            cards: response.data.cards,
+            totalCount,
+            totalPages,
+          })
+        );
+      } catch (error) {
+        console.error("Error fetching cards:", error);
+      } finally {
         setLoading(false);
-      } else {
-        try {
-          const params = {
-            pageSize: 20,
-            page: page,
-            name: inputValue,
-            contains: "imageUrl",
-            types: selectedValues.types,
-            formats: selectedValues.formats,
-            supertypes: selectedValues.superTypes,
-          };
-
-          const response = await axios.get(
-            "https://api.magicthegathering.io/v1/cards?",
-            { params }
-          );
-
-          const totalCount = parseInt(response.headers["total-count"]);
-          const totalPages = Math.ceil(totalCount / 20);
-
-          setCards(response.data.cards);
-          setTotalCount(totalCount);
-          setTotalPages(totalPages);
-
-          localStorage.setItem(
-            cacheKey,
-            JSON.stringify({
-              cards: response.data.cards,
-              totalCount,
-              totalPages,
-            })
-          );
-        } catch (error) {
-          console.error("Error fetching cards:", error);
-        } finally {
-          setLoading(false);
-        }
       }
     };
 
@@ -76,7 +63,6 @@ function App() {
     selectedValues.types,
     selectedValues.superTypes,
     selectedValues.formats,
-    selectedValues,
   ]);
 
   const nextPage = () => {
@@ -125,29 +111,51 @@ function App() {
   };
   const handleSelectedValuesChange = (values) => {
     setSelectedValues(values);
+    setPage(1);
   };
 
-  const advancedSearch = () => {
-    const params = {
-      pageSize: 20,
-      page: page,
-      contains: "imageUrl",
-      types: selectedValues.types,
-      formats: selectedValues.formats,
-      supertypes: selectedValues.superTypes,
-    };
-    axios
-      .get("https://api.magicthegathering.io/v1/cards?", { params })
-      .then((res) => {
-        console.log(res);
-      });
+  const resetAdvanceParams = () => {
+    setSelectedValues({
+      types: "",
+      superTypes: "",
+      formats: "",
+    });
+    setPage(1);
   };
 
   return (
     <>
       <Header onSelectedValuesChange={handleSelectedValuesChange} />
-      <button onClick={advancedSearch}>search</button>
       <div className="container my-5">
+        {(selectedValues.types !== "" ||
+          selectedValues.supertypes !== "" ||
+          selectedValues.formats !== "") && (
+          <div className="card col-12 col-md-6 col-lg-3 ps-3 pt-3 mx-auto">
+            <ul className="list-unstyled">
+              <li>
+                <strong>Type: </strong>
+                {selectedValues.types}
+              </li>
+              <li>
+                <strong>Format: </strong>
+                {selectedValues.formats}
+              </li>
+              <li>
+                <strong>Supertype: </strong>
+                {selectedValues.superTypes}
+              </li>
+              <li>
+                <button
+                  onClick={resetAdvanceParams}
+                  className="btn ms_btn-secondary text-white mt-2"
+                >
+                  reset
+                </button>
+              </li>
+            </ul>
+          </div>
+        )}
+
         <div className="row gap-4 m-4 align-items-center justify-content-between">
           <div className="d-flex gap-4 align-items-center justify-content-center col-12 col-md-6 col-lg-4 p-0">
             <nav aria-label="Page navigation" className="my-4">
