@@ -18,10 +18,14 @@ function App() {
       const cacheKey = `cachedData_page${page}_input${inputValue}`;
       const cachedData = localStorage.getItem(cacheKey);
       console.log(selectedValues);
+      console.log(selectedValues.types);
+      console.log(selectedValues.superTypes);
+      console.log(selectedValues.formats);
 
       if (cachedData) {
         const parsedData = JSON.parse(cachedData);
         setCards(parsedData.cards);
+        // console.log(parsedData.cards)
         setTotalCount(parsedData.totalCount);
         setTotalPages(parsedData.totalPages);
         setLoading(false);
@@ -66,7 +70,14 @@ function App() {
     };
 
     fetchData();
-  }, [page, inputValue, selectedValues]);
+  }, [
+    page,
+    inputValue,
+    selectedValues.types,
+    selectedValues.superTypes,
+    selectedValues.formats,
+    selectedValues,
+  ]);
 
   const nextPage = () => {
     setPage(page + 1);
@@ -116,10 +127,26 @@ function App() {
     setSelectedValues(values);
   };
 
+  const advancedSearch = () => {
+    const params = {
+      pageSize: 20,
+      page: page,
+      contains: "imageUrl",
+      types: selectedValues.types,
+      formats: selectedValues.formats,
+      supertypes: selectedValues.superTypes,
+    };
+    axios
+      .get("https://api.magicthegathering.io/v1/cards?", { params })
+      .then((res) => {
+        console.log(res);
+      });
+  };
+
   return (
     <>
       <Header onSelectedValuesChange={handleSelectedValuesChange} />
-      {/* <button onClick={fetchData}>search</button> */}
+      <button onClick={advancedSearch}>search</button>
       <div className="container my-5">
         <div className="row gap-4 m-4 align-items-center justify-content-between">
           <div className="d-flex gap-4 align-items-center justify-content-center col-12 col-md-6 col-lg-4 p-0">
