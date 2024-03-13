@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-function AdvancedSearchModal({ show, onHide }) {
+function AdvancedSearchModal({ show, onHide, onApply }) {
   const [types, setTypes] = useState([]);
   const [formats, setFormats] = useState([]);
   const [superTypes, setSuperTypes] = useState([]);
@@ -71,11 +71,20 @@ function AdvancedSearchModal({ show, onHide }) {
   }, []);
 
   const renderOptions = (options) => {
-    return ["Select", ...options].map((option, index) => (
+    return ["", ...options].map((option, index) => (
       <option value={option} key={index}>
         {option}
       </option>
     ));
+  };
+  const handleApply = () => {
+    const selectedValues = {
+      types: document.getElementById("types").value,
+      formats: document.getElementById("formats").value,
+      superTypes: document.getElementById("supertypes").value,
+    };
+    onApply(selectedValues);
+    onHide(); 
   };
 
   return (
@@ -113,7 +122,7 @@ function AdvancedSearchModal({ show, onHide }) {
         <Button variant="secondary" onClick={onHide}>
           Close
         </Button>
-        <Button className="ms_btn-secondary" onClick={onHide}>
+     <Button className="ms_btn-secondary" onClick={handleApply}>
           Apply
         </Button>
       </Modal.Footer>
@@ -124,6 +133,7 @@ function AdvancedSearchModal({ show, onHide }) {
 AdvancedSearchModal.propTypes = {
   show: PropTypes.bool.isRequired,
   onHide: PropTypes.func.isRequired,
+  onApply: PropTypes.func.isRequired,
 };
 
 export default AdvancedSearchModal;
